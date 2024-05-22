@@ -1,7 +1,7 @@
 param (
   [Parameter()]
   [switch]
-  $UninstallSpotifyStoreEdition = (Read-Host -Prompt 'Uninstall Spotify Windows Store edition if it exists (Y/N)') -eq 'y',
+  $UninstallSpotifyStoreEdition = (Read-Host -Prompt 'Uninstall Spotify Microsoft Store Edition if it exists (Y/N)') -eq 'y',
   [Parameter()]
   [switch]
   $UpdateSpotify
@@ -104,7 +104,7 @@ function Test-SpotifyVersion
 
 Write-Host @'
 **********************************
-Authors: @Nuzair46, @KUTlime
+Authors: @realret4ke
 **********************************
 '@
 
@@ -164,7 +164,7 @@ if (-not $spotifyInstalled) {
 
 if (-not $UpdateSpotify -and $unsupportedClientVersion)
 {
-  if ((Read-Host -Prompt 'In order to install Block the Spot, your Spotify client must be updated. Do you want to continue? (Y/N)') -ne 'y')
+  if ((Read-Host -Prompt 'In order to install the Ad Blocker, your Spotify client must be updated. Do you want to continue? (Y/N)') -ne 'y')
   {
     exit
   }
@@ -172,7 +172,7 @@ if (-not $UpdateSpotify -and $unsupportedClientVersion)
 
 if (-not $spotifyInstalled -or $UpdateSpotify -or $unsupportedClientVersion)
 {
-  Write-Host 'Downloading the latest Spotify full setup, please wait...'
+  Write-Host 'Downloading the latest Spotify Version, please wait...'
   $spotifySetupFilePath = Join-Path -Path $PWD -ChildPath 'SpotifyFullSetup.exe'
   try
   {
@@ -193,11 +193,11 @@ if (-not $spotifyInstalled -or $UpdateSpotify -or $unsupportedClientVersion)
 
   [System.Security.Principal.WindowsPrincipal] $principal = [System.Security.Principal.WindowsIdentity]::GetCurrent()
   $isUserAdmin = $principal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
-  Write-Host 'Running installation...'
+  Write-Host 'Running Installation...'
   if ($isUserAdmin)
   {
     Write-Host
-    Write-Host 'Creating scheduled task...'
+    Write-Host 'Creating Scheduled Task...'
     $apppath = 'powershell.exe'
     $taskname = 'Spotify install'
     $action = New-ScheduledTaskAction -Execute $apppath -Argument "-NoLogo -NoProfile -Command & `'$spotifySetupFilePath`'"
@@ -207,7 +207,7 @@ if (-not $spotifyInstalled -or $UpdateSpotify -or $unsupportedClientVersion)
     Write-Host 'The install task has been scheduled. Starting the task...'
     Start-ScheduledTask -TaskName $taskname
     Start-Sleep -Seconds 2
-    Write-Host 'Unregistering the task...'
+    Write-Host 'Unregistering the Task...'
     Unregister-ScheduledTask -TaskName $taskname -Confirm:$false
     Start-Sleep -Seconds 2
   }
@@ -245,7 +245,7 @@ try
   if ($is64Bit) {
     $uri = 'https://github.com/mrpond/BlockTheSpot/releases/latest/download/chrome_elf.zip'
   } else {
-    Write-Host 'At the moment, the ad blocker may not work properly as the x86 architecture has not received a new update.'
+    Write-Host 'At the moment, the Ad Blocker may not work properly as the x86 architecture has not received a new update.'
     $uri = 'https://github.com/mrpond/BlockTheSpot/releases/download/2023.5.20.80/chrome_elf.zip'
   }
 
@@ -299,3 +299,5 @@ Write-Host 'Patching Complete, starting Spotify...'
 
 Start-Process -WorkingDirectory $spotifyDirectory -FilePath $spotifyExecutable
 Write-Host 'Done.'
+pause
+exit /b
